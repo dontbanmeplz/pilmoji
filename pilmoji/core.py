@@ -86,6 +86,7 @@ class Pilmoji:
         self._default_emoji_position_offset: Tuple[int, int] = emoji_position_offset
 
         self._emoji_cache: Dict[str, BytesIO] = {}
+        self._emoji_cache: Dict[str, BytesIO] = {}
         self._discord_emoji_cache: Dict[int, BytesIO] = {}
 
         self._create_draw()
@@ -133,12 +134,15 @@ class Pilmoji:
         if self._cache:
             for stream in self._emoji_cache.values():
                 stream.close()
-
+            for stream in self._http_cache.values():
+                stream.close()
             for stream in self._discord_emoji_cache.values():
                 stream.close()
 
             self._emoji_cache = {}
+            self._http_cache = {}
             self._discord_emoji_cache = {}
+            
 
         self._closed = True
 
@@ -159,7 +163,18 @@ class Pilmoji:
 
             stream.seek(0)
             return stream
+    def gethttp(self,content, /) -> Optional[BytesIO]:
+        if self._cache and emoji in self._http_cache:
+            entry = self._http_cache[emoji]
+            entry.seek(0)
+            return entry
 
+        if stream := self.source.get_emoji(emoji):
+            if self._cache:
+                self._emoji_cache[emoji] = stream
+
+            stream.seek(0)
+            return stream
     def _get_discord_emoji(self, id: SupportsInt, /) -> Optional[BytesIO]:
         id = int(id)
 
@@ -306,7 +321,8 @@ class Pilmoji:
                 stream = None
                 if node.type is NodeType.emoji:
                     stream = self._get_emoji(content)
-
+                elif node.type is NodeType.http:
+                    stream = self.gethttp(content)
                 elif self._render_discord_emoji and node.type is NodeType.discord_emoji:
                     stream = self._get_discord_emoji(content)
 
