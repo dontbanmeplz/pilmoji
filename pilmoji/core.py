@@ -103,9 +103,8 @@ class Pilmoji:
         if not self._closed:
             raise ValueError('Renderer is already open.')
 
-        if _has_requests and isinstance(self.source, HTTPBasedSource):
-            from requests import Session
-            self.source._requests_session = Session()
+        from requests import Session
+        self.source._requests_session = Session()
 
         self._create_draw()
         self._closed = False
@@ -127,9 +126,7 @@ class Pilmoji:
         if self._new_draw:
             del self.draw
             self.draw = None
-
-        if _has_requests and isinstance(self.source, HTTPBasedSource):
-            self.source._requests_session.close()
+        self.source._requests_session.close()
 
         if self._cache:
             for stream in self._emoji_cache.values():
@@ -163,15 +160,38 @@ class Pilmoji:
 
             stream.seek(0)
             return stream
+    def get_http(self,url) -> bytes:
+        """Makes a GET request to the given URL.
+
+        If the `requests` library is installed, it will be used.
+        If it is not installed, :meth:`urllib.request.urlopen` will be used instead.
+
+        Parameters
+        ----------
+        url: str
+            The URL to request from.
+
+        Returns
+        -------
+        bytes
+
+        Raises
+        ------
+        Union[:class:`requests.HTTPError`, :class:`urllib.error.HTTPError`]
+            There was an error requesting from the URL.
+        """
+        with self._requests_session.get(url, 'headers' = {'User-Agent': 'Mozilla/5.0'}) as response:
+                if response.ok:
+                    return response.content
     def gethttp(self,content, /) -> Optional[BytesIO]:
-        if self._cache and emoji in self._http_cache:
-            entry = self._http_cache[emoji]
+        if self._cache and content in self._http_cache:
+            entry = self._http_cache[content]
             entry.seek(0)
             return entry
 
-        if stream := self.source.get_emoji(emoji):
+        if stream := self.get_http(content):
             if self._cache:
-                self._emoji_cache[emoji] = stream
+                self._http_cache[content] = stream
 
             stream.seek(0)
             return stream
