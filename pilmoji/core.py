@@ -86,7 +86,7 @@ class Pilmoji:
         self._default_emoji_position_offset: Tuple[int, int] = emoji_position_offset
 
         self._emoji_cache: Dict[str, BytesIO] = {}
-        self._emoji_cache: Dict[str, BytesIO] = {}
+        self._http_cache: Dict[str, BytesIO] = {}
         self._discord_emoji_cache: Dict[int, BytesIO] = {}
 
         self._create_draw()
