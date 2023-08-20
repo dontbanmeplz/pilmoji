@@ -82,7 +82,7 @@ def _parse_line(line: str, /) -> List[Node]:
         pattern = re.compile(r"\|https://.*\|", re.IGNORECASE)
         if pattern.match(chunk):
             node = Node(NodeType.http, chunk)
-        if len(chunk) > 18:  # This is guaranteed to be a Discord emoji
+        elif len(chunk) > 18:  # This is guaranteed to be a Discord emoji
             node = Node(NodeType.discord_emoji, chunk.split(':')[-1][:-1])
         else:
             node = Node(NodeType.emoji, chunk)
