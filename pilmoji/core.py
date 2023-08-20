@@ -192,7 +192,6 @@ class Pilmoji:
             if self._cache:
                 self._http_cache[content] = stream
 
-            stream.seek(0)
             return stream
     def _get_discord_emoji(self, id: SupportsInt, /) -> Optional[BytesIO]:
         id = int(id)
