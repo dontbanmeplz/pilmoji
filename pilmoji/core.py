@@ -180,7 +180,7 @@ class Pilmoji:
         Union[:class:`requests.HTTPError`, :class:`urllib.error.HTTPError`]
             There was an error requesting from the URL.
         """
-        with self._requests_session.get(url, headers = {'User-Agent': 'Mozilla/5.0'}) as response:
+        with self._requests_session.get("https:" + url, headers = {'User-Agent': 'Mozilla/5.0'}) as response:
                 if response.ok:
                     return response.content
     def gethttp(self,content, /) -> Optional[BytesIO]:
