@@ -48,6 +48,7 @@ class NodeType(Enum):
     text          = 0
     emoji         = 1
     discord_emoji = 2
+    http = 3
 
 
 class Node(NamedTuple):
