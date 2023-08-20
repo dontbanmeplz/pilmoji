@@ -132,8 +132,6 @@ class Pilmoji:
         if self._cache:
             for stream in self._emoji_cache.values():
                 stream.close()
-            for stream in self._http_cache.values():
-                stream.close()
             for stream in self._discord_emoji_cache.values():
                 stream.close()
 
