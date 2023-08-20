@@ -132,6 +132,8 @@ class Pilmoji:
         if self._cache:
             for stream in self._emoji_cache.values():
                 stream.close()
+            for stream in self._http_cache.values():
+                stream.close()
             for stream in self._discord_emoji_cache.values():
                 stream.close()
 
@@ -181,7 +183,7 @@ class Pilmoji:
         """
         with self._requests_session.get(url[1:-1], headers = {'User-Agent': 'Mozilla/5.0'}) as response:
                 if response.ok:
-                    return response.content
+                    return BytesIO(response.content)
     def gethttp(self,content, /) -> Optional[BytesIO]:
         if self._cache and content in self._http_cache:
             entry = self._http_cache[content]
