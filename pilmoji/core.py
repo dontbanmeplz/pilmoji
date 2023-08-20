@@ -9,9 +9,8 @@ from typing import Dict, Optional, SupportsInt, TYPE_CHECKING, Tuple, Type, Type
 
 from .helpers import NodeType, getsize, to_nodes
 from .source import BaseSource, HTTPBasedSource, Twemoji, _has_requests
-
+from io import BytesIO
 if TYPE_CHECKING:
-    from io import BytesIO
 
     FontT = Union[ImageFont.ImageFont, ImageFont.FreeTypeFont, ImageFont.TransposedFont]
     ColorT = Union[int, Tuple[int, int, int], Tuple[int, int, int, int], str]
