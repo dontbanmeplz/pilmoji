@@ -77,7 +77,7 @@ class Pilmoji:
 
         self.source: BaseSource = source
         from requests import Session
-        self.source._requests_session = Session()
+        self._requests_session = Session()
         self._cache: bool = cache
         self._closed: bool = False
         self._new_draw: bool = False
@@ -105,7 +105,7 @@ class Pilmoji:
             raise ValueError('Renderer is already open.')
 
         from requests import Session
-        self.source._requests_session = Session()
+        self._requests_session = Session()
 
         self._create_draw()
         self._closed = False
