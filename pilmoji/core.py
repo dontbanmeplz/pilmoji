@@ -76,7 +76,8 @@ class Pilmoji:
             raise TypeError(f'source must inherit from BaseSource, not {source.__class__}.')
 
         self.source: BaseSource = source
-
+        from requests import Session
+        self.source._requests_session = Session()
         self._cache: bool = cache
         self._closed: bool = False
         self._new_draw: bool = False
